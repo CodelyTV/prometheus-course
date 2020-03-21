@@ -16,7 +16,6 @@ services:
 
   app:
     build: .
-    restart: always
     ports:
       - 8081:8081
     depends_on:

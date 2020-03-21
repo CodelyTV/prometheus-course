@@ -9,6 +9,17 @@ route:
         severity: page
       receiver: email-me
 
+receivers:
+  - name: email-me
+    email_configs:
+      - to: rubencougil@gmail.com
+        from: rubencougil@gmail.com
+        smarthost: smtp.gmail.com:587
+        auth_username: "rubencougil@gmail.com"
+        auth_identity: "rubencougil@gmail.com"
+        auth_password: "txgeokoinkfogisy"
+
+
 #receivers:
 #  - name: email-me
 #    email_configs:
