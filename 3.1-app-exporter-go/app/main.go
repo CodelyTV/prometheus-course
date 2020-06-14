@@ -53,7 +53,7 @@ func main() {
 	go func() {
 		for {
 			// Example of metric push
-			push.New("http://localhost:9091", "codely_job").Collector(e).Add()
+			push.New("http://pushgateway:9091", "codely_job").Collector(e).Add()
 			e.Inc()
 			fmt.Print("_")
 			time.Sleep(1 * time.Second)
