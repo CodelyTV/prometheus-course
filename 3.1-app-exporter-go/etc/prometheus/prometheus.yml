@@ -15,3 +15,9 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['app:8081']
+
+  - job_name: 'pushgateway'
+    scrape_interval: 10s
+    honor_labels: true
+    static_configs:
+      - targets: ['pushgateway:9091']

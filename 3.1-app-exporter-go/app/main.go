@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/push"
 	"log"
 	"math/rand"
 	"net/http"
@@ -29,6 +30,11 @@ var (
 	d = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "codely_app_sample_devices",
 		Help: "Sample counter opts devices for Codely course"}, []string{"device"})
+
+	e = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "codely_app_push_metric",
+		Help: "Sample metric for Codely course (push)",
+	})
 )
 
 func main() {
@@ -40,6 +46,16 @@ func main() {
 			d.With(prometheus.Labels{"device":"/dev/sda"}).Inc()
 			c.Inc()
 			fmt.Print(".")
+			time.Sleep(1 * time.Second)
+		}
+	}()
+
+	go func() {
+		for {
+			// Example of metric push
+			push.New("http://localhost:9091", "codely_job").Collector(e).Add()
+			e.Inc()
+			fmt.Print("_")
 			time.Sleep(1 * time.Second)
 		}
 	}()
