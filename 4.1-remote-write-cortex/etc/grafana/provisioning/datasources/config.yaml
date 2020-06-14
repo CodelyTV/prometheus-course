@@ -1,0 +1,15 @@
+# config file version
+apiVersion: 1
+
+deleteDatasources:
+  - name: Prometheus
+    orgId: 1
+
+datasources:
+  - name: 'Cortex'
+    type: 'prometheus'
+    access: 'proxy'
+    org_id: 1
+    url: 'http://cortex:9009/api/prom'
+    version: 1
+    editable: true

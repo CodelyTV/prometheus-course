@@ -1,0 +1,25 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'codely-app'
+
+scrape_configs:
+
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'codely'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['app:8081']
+
+remote_write:
+  - url: http://cortex:9009/api/prom/push
+    queue_config:
+      capacity: 5000
+      max_shards: 20
+      min_shards: 5
+      max_samples_per_send: 1000

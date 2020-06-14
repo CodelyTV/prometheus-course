@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.1.0
+    volumes:
+      - ./etc/prometheus/:/etc/prometheus/
+      - ./var/prometheus/prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+
+  cortex:
+    image: cortexproject/cortex:v0.1.0
+    ports:
+      - "9009:9009"
+    command: "-config.file=/etc/single-process-config.yaml"
+    depends_on:
+      - prometheus
+    volumes:
+      - "./etc/cortex/single-process-config.yaml:/etc/single-process-config.yaml"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - "./var/grafana/grafana_data:/var/lib/grafana"
+      - "./etc/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources"
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=foobar
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+  app:
+    build: .
+    ports:
+      - 8081:8081
+    depends_on:
+      - prometheus
