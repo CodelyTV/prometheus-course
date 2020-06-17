@@ -1,0 +1,6 @@
+{
+    "require": {
+        "laravel/lumen": "^7.0",
+        "endclothing/prometheus_client_php": "^1.0"
+    }
+}
