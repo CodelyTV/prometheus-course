@@ -2,7 +2,7 @@ version: '3.7'
 services:
 
   prometheus:
-    image: prom/prometheus:v2.1.0
+    image: prom/prometheus:v2.19.0
     volumes:
       - ./etc/prometheus/:/etc/prometheus/
       - ./var/prometheus/prometheus_data:/prometheus
