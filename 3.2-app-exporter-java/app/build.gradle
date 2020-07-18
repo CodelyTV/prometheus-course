@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'io.prometheus:simpleclient:0.9.0'
+    implementation 'io.prometheus:simpleclient_hotspot:0.9.0'
+    implementation 'io.prometheus:simpleclient_httpserver:0.9.0'
+    implementation 'io.prometheus:simpleclient_pushgateway:0.9.0'
+}
+
+application {
+    mainClassName = 'prometheusdemo.App'
+}
