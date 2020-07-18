@@ -17,20 +17,27 @@ $counter->inc(['code' => 200]);
 $counter->inc(['code' => 400]);
 
 $app->router->get(
+    '/',
+    static function () {
+        return "hola";
+    }
+);
+
+$app->router->get(
     '/send',
-    static function () use ($gauge) {
+     function () use ($gauge) {
         $gauge->set(mt_rand(0, 1000), ['method' => 'get', 'code' => '200']);
-        $gauge->inc(['post' => '300']);
     }
 );
 
 $app->router->get(
     '/metrics',
-    static function () use ($registry) {
+     function () use ($registry) {
         $renderer = new RenderTextFormat();
         $result = $renderer->render($registry->getMetricFamilySamples());
-
-        header('Content-type: ' . RenderTextFormat::MIME_TYPE);
-        echo $result;
+         return (new \Illuminate\Http\Response($result, 200))
+             ->header('Content-Type', RenderTextFormat::MIME_TYPE);
     }
 );
+
+$app->run();
