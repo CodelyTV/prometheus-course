@@ -14,16 +14,6 @@ services:
     ports:
       - 9090:9090
 
-  cadvisor:
-    image: google/cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    ports:
-      - 8080:8080
-
   mysql:
     image: mysql:5.7
     restart: always

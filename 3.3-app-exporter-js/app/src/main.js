@@ -1,6 +1,7 @@
 const express = require('express');
 const client = require('prom-client');
 const server = express();
+
 const counter = require('prom-client').Counter;
 const gauge = require('prom-client').Gauge;
 
@@ -16,21 +17,21 @@ const g = new gauge({
 });
 
 setInterval(() => {
-    c.inc(({code: 200}))
+    c.inc(({ code: 200 }))
 }, 1000);
 
 setInterval(() => {
-    c.inc(({code: 400}))
+    c.inc(({ code: 400 }))
 }, 4000);
 
-server.get('/send', function(req, res){
+server.get('/send', function (req, res) {
     g.set({ method: 'get', code: 200 }, Math.random());
     g.set(Math.random());
     g.labels('post', '300').inc();
     res.end();
 });
 
-server.get('/metrics', function(req, res) {
+server.get('/metrics', function (req, res) {
     res.end(client.register.metrics());
 });
 

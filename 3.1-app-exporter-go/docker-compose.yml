@@ -14,13 +14,6 @@ services:
     ports:
       - 9090:9090
 
-  pushgateway:
-    image: prom/pushgateway
-    ports:
-      - "9091:9091"
-    depends_on:
-      - prometheus
-
   app:
     build: .
     ports:
