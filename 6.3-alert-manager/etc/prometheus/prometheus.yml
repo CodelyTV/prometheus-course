@@ -14,17 +14,20 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'cadvisor'
-    scrape_interval: 5s
-    static_configs:
-      - targets: ['cadvisor:8080']
-
   - job_name: 'codely'
     scrape_interval: 5s
     static_configs:
       - targets: ['app:8081']
 
-  - job_name: 'mysqld_exporter'
+  - job_name: 'alertmanager'
     scrape_interval: 5s
     static_configs:
-      - targets: ['mysqld_exporter:9104']
+      - targets: ['alertmanager:9093']
+
+# alert
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets:
+            - "alertmanager:9093"

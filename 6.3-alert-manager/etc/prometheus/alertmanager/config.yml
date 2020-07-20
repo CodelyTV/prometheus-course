@@ -1,31 +1,7 @@
 route:
-  group_by: ['...']
-  group_wait: 30s
-  group_interval: 5m
-  repeat_interval: 3h
-  receiver: email-me
-  routes:
-    - match:
-        severity: page
-      receiver: email-me
+  receiver: 'pager'
 
 receivers:
-  - name: email-me
-    email_configs:
-      - to: rubencougil@gmail.com
-        from: rubencougil@gmail.com
-        smarthost: smtp.gmail.com:587
-        auth_username: "rubencougil@gmail.com"
-        auth_identity: "rubencougil@gmail.com"
-        auth_password: "txgeokoinkfogisy"
-
-
-#receivers:
-#  - name: email-me
-#    email_configs:
-#      - to: xxx
-#        from: xxx
-#        smarthost: xxx
-#        auth_username: xxx
-#        auth_identity: xxx
-#        auth_password: xxx
+  - name: 'pager'
+    webhook_configs:
+      - url: https://ngrok.io
