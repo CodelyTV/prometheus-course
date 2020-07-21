@@ -14,15 +14,23 @@ services:
     ports:
       - 9090:9090
 
-  cortex:
-    image: cortexproject/cortex:v0.1.0
+  app:
+    build: .
+    restart: always
     ports:
-      - "9009:9009"
-    command: "-config.file=/etc/single-process-config.yaml"
+      - 8081:8081
     depends_on:
       - prometheus
+
+  cadvisor:
+    image: google/cadvisor
     volumes:
-      - "./etc/cortex/single-process-config.yaml:/etc/single-process-config.yaml"
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8080:8080
 
   grafana:
     image: grafana/grafana
@@ -30,16 +38,7 @@ services:
       - 3000:3000
     volumes:
       - "./var/grafana/grafana_data:/var/lib/grafana"
-      - "./etc/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources"
-    depends_on:
-      - prometheus
+      - "./etc/grafana/provisioning/:/etc/grafana/provisioning/"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=foobar
       - GF_USERS_ALLOW_SIGN_UP=false
-
-  app:
-    build: .
-    ports:
-      - 8081:8081
-    depends_on:
-      - prometheus

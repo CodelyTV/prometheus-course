@@ -16,19 +16,14 @@ services:
 
   app:
     build: .
-    restart: always
     ports:
       - 8081:8081
     depends_on:
       - prometheus
 
-  grafana:
-    image: grafana/grafana
+  pushgateway:
+    image: prom/pushgateway
     ports:
-      - 3000:3000
-    volumes:
-      - "./var/grafana/grafana_data:/var/lib/grafana"
-      - "./etc/grafana/provisioning/:/etc/grafana/provisioning/"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=foobar
-      - GF_USERS_ALLOW_SIGN_UP=false
+      - "9091:9091"
+    depends_on:
+      - prometheus

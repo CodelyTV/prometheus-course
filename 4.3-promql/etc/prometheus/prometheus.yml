@@ -15,3 +15,11 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['app:8081']
+
+remote_write:
+  - url: http://cortex:9009/api/prom/push
+    queue_config:
+      capacity: 5000
+      max_shards: 20
+      min_shards: 5
+      max_samples_per_send: 1000
