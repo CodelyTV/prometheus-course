@@ -3,14 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"log"
 	"math/rand"
-	"net/http"
 	"time"
-
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var addr = flag.String("listen-address", ":8081", "The address to listen on for HTTP requests.")
@@ -33,6 +32,28 @@ var (
 
 func main() {
 
+	rand.Seed(time.Now().UnixNano())
+	r := gin.New()
+
+	p := ginprometheus.NewPrometheus("http")
+	p.Use(r)
+
+	r.GET("/", func(c *gin.Context) {
+
+		time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
+
+		switch rand.Intn(6) {
+		case 0: c.JSON(200, "Hello world!")
+		case 1: c.JSON(404, "Not Found!")
+		case 2: c.JSON(500, "Oops!")
+		case 3: c.JSON(401, "Unauthorized!")
+		case 4: c.JSON(403, "Forbidden!")
+		case 5: c.JSON(408, "Timeout!")
+		default:
+			c.JSON(200, "Hello world!")
+		}
+	})
+
 	go func() {
 		for {
 			rand.Seed(time.Now().UnixNano())
@@ -44,6 +65,5 @@ func main() {
 		}
 	}()
 
-	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(*addr, nil))
+	log.Fatal(r.Run(*addr))
 }

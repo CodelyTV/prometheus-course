@@ -2,11 +2,11 @@ groups:
 - name: pager
   rules:
 
-  - alert: sample_metric_gt_zero
-    expr: rate(codely_app_sample_metric[1m]) > 0
+  - alert: http_errors_gt_50%
+    expr: sum(rate(http_requests_total{code!="200"}[1m])) / sum(rate(http_requests_total[1m])) * 100 > 50
     for: 1m
     labels:
       severity: page
     annotations:
-      summary: "Codely Sample Metric for {{ $labels.instance }} is > 0"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} is > 0."
+      summary: "HTTP Status Error Code {{ $labels.code }} for {{ $labels.instance }} is > 50% of total HTTP Responses"
+      description: "Error Code {{ $labels.code }} at {{ $labels.instance }} of job {{ $labels.job }} is > 50%"
