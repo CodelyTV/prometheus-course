@@ -32,19 +32,23 @@ var (
 
 func main() {
 
+	rand.Seed(time.Now().UnixNano())
 	r := gin.New()
 
 	p := ginprometheus.NewPrometheus("http")
 	p.Use(r)
 
 	r.GET("/", func(c *gin.Context) {
+
 		time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
 
-		switch rand.Intn(3) {
+		switch rand.Intn(6) {
 		case 0: c.JSON(200, "Hello world!")
 		case 1: c.JSON(404, "Not Found!")
 		case 2: c.JSON(500, "Oops!")
-		case 3: c.JSON(401, "Forbidden!")
+		case 3: c.JSON(401, "Unauthorized!")
+		case 4: c.JSON(403, "Forbidden!")
+		case 5: c.JSON(408, "Timeout!")
 		default:
 			c.JSON(200, "Hello world!")
 		}

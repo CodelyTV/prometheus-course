@@ -26,6 +26,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -83,12 +84,24 @@
       "targets": [
         {
           "expr": "avg(container_memory_usage_bytes{container_label_com_docker_compose_service=\"app\"} * 1e-6) by (container_label_com_docker_compose_service)",
+          "format": "time_series",
+          "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "Container: {{container_label_com_docker_compose_service}}",
           "refId": "A"
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "$$hashKey": "object:176",
+          "colorMode": "warning",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 10,
+          "yaxis": "left"
+        }
+      ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -108,6 +121,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:103",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -116,6 +130,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:104",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -136,15 +151,19 @@
           "custom": {},
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
               },
               {
+                "color": "#EAB839",
+                "value": 65
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 85
               }
             ]
           }
@@ -191,11 +210,15 @@
           "custom": {},
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 50
               },
               {
                 "color": "red",
@@ -228,7 +251,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "avg(container_cpu_load_average_10s{container_label_com_docker_compose_service=\"app\"})",
+          "expr": "sum by (container_label_com_docker_compose_service) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"app\"}[1m]) * 1024 * 60) / on (container_label_com_docker_compose_service) (container_spec_cpu_shares{container_label_com_docker_compose_service=\"app\"}) / 60 * 100",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -236,7 +259,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "CPU Usage ",
+      "title": "App CPU Usage %",
       "type": "gauge"
     },
     {
@@ -246,11 +269,15 @@
           "custom": {},
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 50
               },
               {
                 "color": "red",
@@ -283,7 +310,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(rate(http_requests_total{job=\"codely\"}[5m])) by (code)",
+          "expr": "sum(rate(http_requests_total{job=\"codely\", code!=\"200\"}[5m])) by (code)",
           "interval": "",
           "legendFormat": "Code: {{code}}",
           "refId": "A"
@@ -291,11 +318,16 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Response Code",
+      "title": "Error Response Code",
       "type": "bargauge"
     },
     {
-      "aliasColors": {},
+      "aliasColors": {
+        "{code=\"401\"}": "red",
+        "{code=\"403\"}": "red",
+        "{code=\"404\"}": "red",
+        "{code=\"500\"}": "red"
+      },
       "bars": true,
       "dashLength": 10,
       "dashes": false,
@@ -389,7 +421,9 @@
       }
     },
     {
-      "aliasColors": {},
+      "aliasColors": {
+        "go_goroutines{instance=\"app:8081\", job=\"codely\"}": "purple"
+      },
       "bars": false,
       "dashLength": 10,
       "dashes": false,
@@ -483,6 +517,7 @@
       }
     }
   ],
+  "refresh": "5s",
   "schemaVersion": 25,
   "style": "dark",
   "tags": [],
@@ -490,7 +525,7 @@
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -509,5 +544,5 @@
   "timezone": "",
   "title": "Codely Dashboard",
   "uid": "_nvdxP7Gz",
-  "version": 6
+  "version": 1
 }

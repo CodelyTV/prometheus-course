@@ -32,6 +32,8 @@ var (
 
 func main() {
 
+	rand.Seed(time.Now().UnixNano())
+
 	go func() {
 		for {
 			rand.Seed(time.Now().UnixNano())
