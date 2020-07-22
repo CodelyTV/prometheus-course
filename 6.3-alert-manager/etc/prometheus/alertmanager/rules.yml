@@ -6,7 +6,7 @@ groups:
     expr: sum(rate(http_requests_total{code!="200"}[1m])) / sum(rate(http_requests_total[1m])) * 100 > 50
     for: 1m
     labels:
-      severity: page
+      severity: critical
     annotations:
       summary: "HTTP Status Error Code {{ $labels.code }} for {{ $labels.instance }} is > 50% of total HTTP Responses"
       description: "Error Code {{ $labels.code }} at {{ $labels.instance }} of job {{ $labels.job }} is > 50%"
