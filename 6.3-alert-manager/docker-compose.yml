@@ -23,17 +23,6 @@ services:
     depends_on:
       - prometheus
 
-  grafana:
-    image: grafana/grafana
-    ports:
-      - 3000:3000
-    volumes:
-      - "./var/grafana/grafana_data:/var/lib/grafana"
-      - "./etc/grafana/provisioning/:/etc/grafana/provisioning/"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=foobar
-      - GF_USERS_ALLOW_SIGN_UP=false
-
   alertmanager:
     image: prom/alertmanager
     ports:

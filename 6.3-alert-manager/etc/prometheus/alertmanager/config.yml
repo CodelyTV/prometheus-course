@@ -4,4 +4,4 @@ route:
 receivers:
   - name: 'pager'
     webhook_configs:
-      - url: https://ngrok.io
+      - url: https://avisa.me
